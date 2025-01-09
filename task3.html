@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .question-container {
+      margin-bottom: 20px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>What is the capital of France?</h1>
+  <div class="question-container">
+    <button onclick="checkAnswer('Paris')">Paris</button>
+    <button onclick="checkAnswer('London')">London</button>
+    <button onclick="checkAnswer('Berlin')">Berlin</button>
+    <button onclick="checkAnswer('Rome')">Rome</button>
+  </div>
+
+  <div id="result" class="result"></div>
+
+  <script>
+    function checkAnswer(answer) {
+      const correctAnswer = 'Paris';
+      const resultElement = document.getElementById('result');
+      
+      if (answer === correctAnswer) {
+        resultElement.textContent = "Correct!";
+        resultElement.style.color = "green";
+      } else {
+        resultElement.textContent = "Wrong answer. Try again!";
+        resultElement.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
