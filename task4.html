@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Web Projects</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        header { background: #333; color: #fff; padding: 10px 20px; text-align: center; }
+        nav ul { list-style: none; display: flex; justify-content: center; padding: 0; }
+        nav ul li { margin: 0 10px; }
+        nav ul li a { color: #fff; text-decoration: none; }
+        section { padding: 20px; }
+        footer { background: #333; color: #fff; text-align: center; padding: 10px; }
+
+        /* Portfolio */
+        #portfolio ul { list-style: none; padding: 0; }
+        #portfolio ul li { margin: 10px 0; }
+
+        /* To-Do List */
+        #todo ul { list-style: none; padding: 0; }
+        #todo li { display: flex; justify-content: space-between; margin: 10px 0; }
+        #todo li span { cursor: pointer; color: red; }
+
+        /* Product Listing */
+        #products .product { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Combined Web Projects</h1>
+        <nav>
+            <ul>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#todo">To-Do List</a></li>
+                <li><a href="#product-listing">Product Listing</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio">
+        <h2>Personal Portfolio</h2>
+        <p>Welcome to my portfolio! I am a web developer specializing in creating interactive and responsive websites.</p>
+        <h3>Projects:</h3>
+        <ul>
+            <li>Project 1: E-commerce Website</li>
+            <li>Project 2: To-Do List App</li>
+            <li>Project 3: Blog Platform</li>
+        </ul>
+        <h3>Contact Me:</h3>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
+
+    <!-- To-Do List Section -->
+    <section id="todo">
+        <h2>To-Do List</h2>
+        <input type="text" id="taskInput" placeholder="Add a new task">
+        <button id="addTaskBtn">Add Task</button>
+        <ul id="taskList"></ul>
+    </section>
+
+    <!-- Product Listing Section -->
+    <section id="product-listing">
+        <h2>Product Listing</h2>
+        <label for="categoryFilter">Filter by Category:</label>
+        <select id="categoryFilter">
+            <option value="all">All</option>
+            <option value="electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+        </select>
+
+        <label for="sortPrice">Sort by Price:</label>
+        <select id="sortPrice">
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
+        </select>
+
+        <div id="products">
+            <div class="product" data-category="electronics" data-price="299">
+                <h3>Smartphone</h3>
+                <p>Price: $299</p>
+            </div>
+            <div class="product" data-category="fashion" data-price="49">
+                <h3>T-shirt</h3>
+                <p>Price: $49</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Combined Web Projects. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // To-Do List Script
+        const taskInput = document.getElementById('taskInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+
+        const loadTasks = () => {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => addTask(task));
+        };
+
+        const saveTasks = () => {
+            const tasks = [...document.querySelectorAll('#taskList li')].map(li => li.textContent.replace('❌', '').trim());
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        };
+
+        const addTask = (taskText) => {
+            const li = document.createElement('li');
+            li.textContent = taskText;
+            const deleteBtn = document.createElement('span');
+            deleteBtn.textContent = ' ❌';
+            deleteBtn.onclick = () => {
+                li.remove();
+                saveTasks();
+            };
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+        };
+
+        addTaskBtn.onclick = () => {
+            if (taskInput.value.trim()) {
+                addTask(taskInput.value);
+                saveTasks();
+                taskInput.value = '';
+            }
+        };
+
+        loadTasks();
+
+        // Product Listing Script
+        const products = [...document.querySelectorAll('#products .product')];
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sortPrice = document.getElementById('sortPrice');
+
+        const filterAndSortProducts = () => {
+            const category = categoryFilter.value;
+            const sortOrder = sortPrice.value;
+
+            const filteredProducts = products.filter(product =>
+                category === 'all' || product.dataset.category === category
+            );
+
+            filteredProducts.sort((a, b) =>
+                sortOrder === 'asc' ? a.dataset.price - b.dataset.price : b.dataset.price - a.dataset.price
+            );
+
+            const productsContainer = document.getElementById('products');
+            productsContainer.innerHTML = '';
+            filteredProducts.forEach(product => productsContainer.appendChild(product));
+        };
+
+        categoryFilter.onchange = filterAndSortProducts;
+        sortPrice.onchange = filterAndSortProducts;
+
+        filterAndSortProducts();
+    </script>
+</body>
+</html>
